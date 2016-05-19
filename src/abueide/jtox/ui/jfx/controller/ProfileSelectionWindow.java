@@ -2,6 +2,7 @@ package abueide.jtox.ui.jfx.controller;
 
 import abueide.jtox.tox.Profile;
 import abueide.jtox.util.Globals;
+import abueide.jtox.util.Util;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.FXCollections;
@@ -91,25 +92,19 @@ public class ProfileSelectionWindow implements Initializable {
 
     // setOnAction methods
     private void createProfile() {
-        Profile p = new ProfileWindow(new Profile()).display();
-        Globals.jtoxdb.executeStatement(Globals.insertProfile(p),
-                "Successfully inserted " + p.getName() + " into table profiles");
+        new ProfileWindow().display();
         updateProfileListView();
     }
 
     private void deleteProfile() {
-        for (Profile profile : profileListView.getSelectionModel().getSelectedItems()) {
-            Globals.jtoxdb.executeStatement(Globals.deleteProfile(profile), "Successfully deleted profile");
-        }
+        profileListView.getSelectionModel().getSelectedItems().forEach(Profile::delete);
         updateProfileListView();
 
     }
 
     private void editProfile() {
-        Profile p;
         for (Profile profile : profileListView.getSelectionModel().getSelectedItems()) {
-            p = new ProfileWindow(profile).display();
-            Globals.jtoxdb.executeStatement(Globals.editProfile(p), "Successfully edited profile");
+            new ProfileWindow(profile).display();
         }
         updateProfileListView();
     }
@@ -157,18 +152,7 @@ public class ProfileSelectionWindow implements Initializable {
     }
 
     public void updateProfileListView() {
-        profiles = Globals.jtoxdb.getProfiles();
+        profiles = Util.getProfiles();
         profileListView.setItems(FXCollections.observableList(profiles));
     }
-
-    // Getters + Setters
-    public List<Profile> getProfiles() {
-        return profiles;
-    }
-
-    public void setProfiles(List<Profile> profiles) {
-        this.profiles = profiles;
-        profileListView.setItems(FXCollections.observableList(this.profiles));
-    }
-
 }

@@ -11,9 +11,8 @@ import java.util.List;
 
 public class DataBase {
 
-    String databaseDir;
-    Connection connection = null;
-    Statement statement = null;
+    private String databaseDir;
+    private Connection connection = null;
 
     public DataBase(String databaseDir) {
         this.databaseDir = databaseDir;
@@ -24,44 +23,51 @@ public class DataBase {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + databaseDir);
-            System.out.println(databaseDir);
-
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
         //System.out.println("Opened database successfully");
-        executeStatement(Globals.createTableStatement(), "Created table profiles successfully");
-        executeStatement("VACUUM", "Vacuumed database");
+            executeStatement(Globals.createTableStatement());
     }
 
     public void close() {
         try {
             connection.close();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         connection = null;
-        Globals.jtoxdb = null;
     }
 
-    public void executeStatement(String s, String success) {
+    public void executeStatement(String s) {
         if (connection != null) {
             try {
-                statement = connection.createStatement();
+                Statement statement = connection.createStatement();
                 statement.executeUpdate(s);
                 statement.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            System.out.println(success);
         }
     }
 
-    public List<Profile> getProfiles() {
+    public ResultSet executeQuery(String query){
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            return rs;
+        } catch (SQLException e) {
+            System.out.println("Query Failed");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /*public List<Profile> getProfiles() {
         List<Profile> profiles = new ArrayList<Profile>();
         try {
+            Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("select * from profiles;");
             while (rs.next()) {
                 profiles.add(new Profile(rs.getInt("id"), rs.getString("name"), rs.getString("encryption_key")));
@@ -74,14 +80,14 @@ public class DataBase {
         }
 
 
-    }
+    }*/
 
-    public String getDatabase() {
+    public String getDatabaseDir() {
         return databaseDir;
     }
 
-    public void setDatabase(String database) {
-        this.databaseDir = database;
+    public void setDatabaseDir(String databaseDir) {
+        this.databaseDir = databaseDir;
     }
 
 }

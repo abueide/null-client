@@ -1,6 +1,9 @@
 package abueide.jtox.ui.jfx.controller;
 
 import abueide.jtox.tox.Profile;
+import abueide.jtox.util.Globals;
+import abueide.jtox.util.Util;
+import abueide.jtox.util.database.DataBase;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +23,7 @@ import java.util.ResourceBundle;
 
 public class ProfileWindow implements Initializable {
 
+    private boolean newProfile = false;
     private Profile profile;
 
     @FXML
@@ -32,7 +36,7 @@ public class ProfileWindow implements Initializable {
     Button cancelButton;
 
     public ProfileWindow() {
-        this.profile = new Profile();
+        newProfile = true;
     }
 
     public ProfileWindow(Profile profile) {
@@ -41,13 +45,15 @@ public class ProfileWindow implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        profileName.setText(profile.getName());
+        if(!newProfile){
+            profileName.setText(profile.getName());
+
+        }
         profileName.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.ENTER) save();
         });
         encryptionKey.setDisable(true);
         encryptionKey.setPromptText("Not Available");
-        encryptionKey.setText(profile.getEncryptionKey());
         encryptionKey.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.ENTER) save();
         });
@@ -56,12 +62,16 @@ public class ProfileWindow implements Initializable {
     }
 
     private void save() {
-        profile.setName(profileName.getText());
-        profile.setEncryptionKey(encryptionKey.getText());
+        String name = profileName.getText();
+        if(newProfile){
+            new Profile(name);
+        }else {
+            profile.setName(name);
+        }
         saveButton.getScene().getWindow().hide();
     }
 
-    public Profile display() {
+    public void display() {
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/jtox/ui/jfx/graphical/ProfileWindow.fxml"));
         loader.setController(this);
         Parent root;
@@ -75,7 +85,6 @@ public class ProfileWindow implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return profile;
     }
 
 }

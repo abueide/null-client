@@ -1,43 +1,88 @@
 package abueide.jtox.tox;
 
+import abueide.jtox.util.Globals;
+import abueide.jtox.util.Util;
+import abueide.jtox.util.database.DataBase;
+
+import java.io.File;
+
 public class Profile {
 
-    private int uid = -1;
-    private String name = "";
-    private String encryptionKey = "";
+    private DataBase database;
 
-    public Profile() {
+    public Profile(DataBase database){
+        this.database = database;
     }
 
-    public Profile(int uid, String name, String encryptionKey) {
-        this.uid = uid;
-        this.name = name;
-        this.encryptionKey = encryptionKey;
+    public Profile(String name) {
+        String description = "Using jTox";
+        String public_key = "";
+        String private_key = "";
+        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name, Globals.DB_EXT);
+        database.executeStatement(
+                "insert into profile (name, description, public_key, private_key) values('" +
+                        name + "','" +
+                        description + "','" +
+                        public_key + "','" +
+                        private_key+ "');"
+        );
+    }
+
+    public Profile(String name, String description) {
+        String public_key = "";
+        String private_key = "";
+        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name, Globals.DB_EXT);
+        database.executeStatement(
+                "insert into profile (name, description, public_key, private_key) values('" +
+                        name + "','" +
+                        description + "','" +
+                        public_key + "','" +
+                        private_key+ "');"
+        );
+    }
+
+    public Profile(String name, String description, String public_key, String private_key) {
+        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name, Globals.DB_EXT);
+        database.executeStatement(
+                "insert into profile (name, description, public_key, private_key) values('" +
+                        name + "','" +
+                        description + "','" +
+                        public_key + "','" +
+                        private_key+ "');"
+        );
     }
 
     public String getName() {
-        return name;
+        try{
+            return database.executeQuery("select * from profile").getString("name");
+        }catch(Exception e){
+            System.out.println("Unable to query profile");
+            return null;
+        }
+    }
+
+    public String getDescription() {
+        try{
+            return database.executeQuery("select * from profile").getString("description");
+        }catch(Exception e){
+            System.out.println("Unable to query profile");
+            return null;
+        }
     }
 
     public void setName(String name) {
-        this.name = name;
+        database.executeStatement("update profile set name = '" + name + "';");
     }
 
-    public String getEncryptionKey() {
-        return encryptionKey;
+    public void setDescription(String description) {
+        database.executeStatement("update profile set description = '" + description + "';");
     }
 
-    public void setEncryptionKey(String encryptionKey) {
-        this.encryptionKey = encryptionKey;
-    }
 
-    public boolean isEncrypted() {
-        return !encryptionKey.isEmpty();
+    public void delete(){
+        //TODO: Confirmation popup box
+        File db = new File(database.getDatabaseDir());
+        db.delete();
     }
-
-    public int getuid() {
-        return uid;
-    }
-
 
 }

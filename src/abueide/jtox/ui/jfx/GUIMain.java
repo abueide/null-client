@@ -21,21 +21,23 @@ public class GUIMain extends Application {
     @Override
     public void start(Stage primaryStage) {
         //Startup stuff
-        new ProfileSelectionWindow(Globals.jtoxdb.getProfiles()).launch(primaryStage);
+        new ProfileSelectionWindow(Util.getProfiles()).launch(primaryStage);
     }
 
     @Override
     public void init() throws Exception {
         //Check for preferences, set them to default if they don't exist
+        Globals.PREF.remove(Globals.PROFILE_DIR);
         if (Globals.PREF.get(Globals.APPDATA_DIR, null) == null) {
             Globals.PREF.put(Globals.APPDATA_DIR, Util.getAppData());
         }
-        if (Globals.PREF.get(Globals.JTOX_DB, null) == null) {
-            Globals.PREF.put(Globals.JTOX_DB, Globals.PREF.get(Globals.APPDATA_DIR, null) + "jTox.sqlite3");
+        if (Globals.PREF.get(Globals.PROFILE_DIR, null) == null) {
+            Globals.PREF.put(Globals.PROFILE_DIR, Globals.PREF.get(Globals.APPDATA_DIR, null) + "profiles/");
         }
 
         //Get app data directory from preferences, return default if it doesn't exist.
         File appDir = new File(Globals.PREF.get(Globals.APPDATA_DIR, null));
+        File profileDir = new File(Globals.PREF.get(Globals.PROFILE_DIR, null));
 
         //Create app data directory if it doesn't exist
         if (!appDir.exists()) {
@@ -45,12 +47,19 @@ public class GUIMain extends Application {
                 System.out.println("Security Exception: Could not create app data folder.");
             }
         }
-        Globals.jtoxdb = new DataBase(Globals.PREF.get(Globals.JTOX_DB, null));
-    }
+        if (!profileDir.exists()) {
+            try {
+                profileDir.mkdirs();
+            } catch (SecurityException se) {
+                System.out.println("Security Exception: Could not create app data folder.");
+            }
+        }
+
+        }
 
     @Override
     public void stop() {
-        Globals.jtoxdb.close();
+
     }
 
 }

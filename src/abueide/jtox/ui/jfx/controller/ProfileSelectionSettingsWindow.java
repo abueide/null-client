@@ -48,7 +48,7 @@ public class ProfileSelectionSettingsWindow implements Initializable {
         appDataDir.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.ENTER) save();
         });
-        databaseDir.setText(Globals.PREF.get(Globals.JTOX_DB, null));
+//        databaseDir.setText(Globals.PREF.get(Globals.JTOX_DB, null));
         databaseDir.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.ENTER) save();
         });
@@ -66,9 +66,9 @@ public class ProfileSelectionSettingsWindow implements Initializable {
 
     private void save(){
         Globals.PREF.put(Globals.APPDATA_DIR, appDataDir.getText());
-        Globals.PREF.put(Globals.JTOX_DB, databaseDir.getText());
-        Globals.jtoxdb.close();
-        Globals.jtoxdb = new DataBase(Globals.PREF.get(Globals.JTOX_DB, null));
+//        Globals.PREF.put(Globals.JTOX_DB, databaseDir.getText());
+//        Globals.jtoxdb.close();
+//        Globals.jtoxdb = new DataBase(Globals.PREF.get(Globals.JTOX_DB, null));
         saveButton.getScene().getWindow().hide();
     }
 
