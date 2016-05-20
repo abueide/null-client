@@ -1,11 +1,9 @@
 package abueide.jtox.util;
 
-import abueide.jtox.tox.Profile;
+import abueide.jtox.tox.data.Profile;
 import abueide.jtox.util.database.DataBase;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +27,6 @@ public class Util {
     }
 
     public static List<Profile> getProfiles() {
-        //TODO: Get profile databases ending with .jtox
         List<Profile> profiles = new ArrayList<>();
         File dir = new File(Globals.PREF.get(Globals.PROFILE_DIR, null));
         for (File file : dir.listFiles((dir1, filename) -> {return filename.endsWith(".jtox");})) {

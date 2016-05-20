@@ -1,7 +1,6 @@
 package abueide.jtox.ui.jfx.controller;
 
-import abueide.jtox.tox.Profile;
-import abueide.jtox.util.Globals;
+import abueide.jtox.tox.data.Profile;
 import abueide.jtox.util.Util;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -17,8 +16,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import abueide.jtox.tox.Profile;
-import abueide.jtox.util.Globals;
 
 import java.io.IOException;
 import java.net.URL;
@@ -115,9 +112,13 @@ public class ProfileSelectionWindow implements Initializable {
     }
 
     private void loadProfile() {
-        new ChatView(profileListView.getSelectionModel().getSelectedItems()).display();
-        loadProfileButton.getScene().getWindow().hide();
+        List<Profile> selected = profileListView.getSelectionModel().getSelectedItems();
+        if (selected.size() > 0) {
+            new ChatView(selected).display();
+            loadProfileButton.getScene().getWindow().hide();
+        }
     }
+
 
     // Window Methods
     public void launch(Stage primaryStage) {

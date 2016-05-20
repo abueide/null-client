@@ -1,13 +1,12 @@
 package abueide.jtox.ui.jfx.controller;
 
-import abueide.jtox.tox.Profile;
+import abueide.jtox.tox.data.Profile;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import abueide.jtox.tox.Profile;
 
 import java.io.IOException;
 import java.net.URL;

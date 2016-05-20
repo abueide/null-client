@@ -2,13 +2,9 @@ package abueide.jtox.ui.jfx;
 
 import abueide.jtox.ui.jfx.controller.ProfileSelectionWindow;
 import abueide.jtox.util.Globals;
-import abueide.jtox.util.database.DataBase;
+import abueide.jtox.util.Util;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import abueide.jtox.ui.jfx.controller.ProfileSelectionWindow;
-import abueide.jtox.util.Globals;
-import abueide.jtox.util.Util;
-import abueide.jtox.util.database.DataBase;
 
 import java.io.File;
 

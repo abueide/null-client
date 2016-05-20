@@ -1,9 +1,6 @@
 package abueide.jtox.ui.jfx.controller;
 
-import abueide.jtox.tox.Profile;
-import abueide.jtox.util.Globals;
-import abueide.jtox.util.Util;
-import abueide.jtox.util.database.DataBase;
+import abueide.jtox.tox.data.Profile;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import abueide.jtox.tox.Profile;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +23,9 @@ public class ProfileWindow implements Initializable {
     private Profile profile;
 
     @FXML
-    TextField profileName;
+    TextField profileNameField;
+    @FXML
+    TextField statusField;
     @FXML
     PasswordField encryptionKey;
     @FXML
@@ -46,27 +44,35 @@ public class ProfileWindow implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         if(!newProfile){
-            profileName.setText(profile.getName());
-
+            profileNameField.setText(profile.getName());
         }
-        profileName.setOnKeyPressed((event) -> {
-            if (event.getCode() == KeyCode.ENTER) save();
-        });
+
         encryptionKey.setDisable(true);
         encryptionKey.setPromptText("Not Available");
+
+        cancelButton.setOnAction(e -> cancelButton.getScene().getWindow().hide());
+
+        saveButton.setOnAction(e -> save());
+
+        profileNameField.setOnKeyPressed((event) -> {
+            if (event.getCode() == KeyCode.ENTER) save();
+        });
+        statusField.setOnKeyPressed((event) -> {
+            if (event.getCode() == KeyCode.ENTER) save();
+        });
         encryptionKey.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.ENTER) save();
         });
-        cancelButton.setOnAction(e -> cancelButton.getScene().getWindow().hide());
-        saveButton.setOnAction(e -> save());
     }
 
     private void save() {
-        String name = profileName.getText();
+        String name = profileNameField.getText();
+        String status = statusField.getText();
         if(newProfile){
-            new Profile(name);
+            new Profile(name, status);
         }else {
             profile.setName(name);
+            profile.setStatus(status);
         }
         saveButton.getScene().getWindow().hide();
     }

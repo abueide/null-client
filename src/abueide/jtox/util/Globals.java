@@ -1,8 +1,5 @@
 package abueide.jtox.util;
 
-import abueide.jtox.tox.Profile;
-import abueide.jtox.util.database.DataBase;
-
 import java.util.prefs.Preferences;
 
 public class Globals {
@@ -19,7 +16,7 @@ public class Globals {
     public static String createTableStatement() {
         return "create table if not exists profile("
                 + "name text,"
-                + "description text,"
+                + "status text,"
                 + "public_key text,"
                 + "private_key text"
                 + ");"
@@ -28,30 +25,16 @@ public class Globals {
                 + "id integer primary key,"
                 + "name text,"
                 + "alias text,"
+                + "status text,"
                 + "public_key text"
                 + ");"
 
                 + "create table if not exists messages ("
-                + "sender integer,"
-                + "receiver integer,"
                 + "timestamp datetime default current_timestamp,"
-                + "message text"
+                + "sender text,"
+                + "receiver text,"
+                + "message text,"
+                + "sent integer"
                 + ");";
     }
-
-    /*public static String insertProfile(Profile profile) {
-        return "insert into profiles (name, encryption_key) values('" +
-                profile.getName() +
-                "', '" +
-                profile.getEncryptionKey() +
-                "');";
-    }
-
-    public static String editProfile(Profile profile) {
-        return "UPDATE profiles SET name = '" + profile.getName() + "', encryption_key = '" + profile.getEncryptionKey() + "' WHERE id = " + profile.getuid() + ";";
-    }
-
-    public static String deleteProfile(Profile profile) {
-        return "DELETE FROM profiles WHERE id=" + profile.getuid() + ";";
-    }*/
 }

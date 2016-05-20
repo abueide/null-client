@@ -1,7 +1,7 @@
 package abueide.jtox.ui.jfx.controller;
 
 import abueide.jtox.util.Globals;
-import abueide.jtox.util.database.DataBase;
+import abueide.jtox.util.Util;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,9 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import abueide.jtox.util.Globals;
-import abueide.jtox.util.Util;
-import abueide.jtox.util.database.DataBase;
 
 import java.io.IOException;
 import java.net.URL;

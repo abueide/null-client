@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -11,7 +9,8 @@
     <children>
         <VBox prefWidth="205.0" spacing="10.0">
             <children>
-                <TextField fx:id="profileName" promptText="Profile Name"/>
+                <TextField fx:id="profileNameField" promptText="Profile Name"/>
+                <TextField fx:id="statusField" promptText="Status"/>
                 <PasswordField fx:id="encryptionKey" promptText="Encryption Key (Optional)"/>
                 <HBox alignment="CENTER" spacing="10.0">
                     <children>

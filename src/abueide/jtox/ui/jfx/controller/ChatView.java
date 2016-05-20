@@ -1,5 +1,6 @@
 package abueide.jtox.ui.jfx.controller;
 
+import abueide.jtox.tox.data.Profile;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -8,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
-import abueide.jtox.tox.Profile;
 
 import java.io.IOException;
 import java.net.URL;
