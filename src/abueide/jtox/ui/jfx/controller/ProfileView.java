@@ -87,23 +87,26 @@ public class ProfileView implements Initializable {
         sendButton.setOnAction(e -> sendMessage(messageField.getText()));
 
         messageField.setOnKeyPressed((event) -> {
-            if (event.getCode() == KeyCode.ENTER) sendMessage(messageField.getText());
+            if (event.getCode() == KeyCode.ENTER && !messageField.getText().isEmpty()) sendMessage(messageField.getText());
         });
         addFriendField.setOnKeyPressed((event) -> {
-            Friend friend = new Friend();
-            friend.setPublicKey(addFriendField.getText());
-            if (event.getCode() == KeyCode.ENTER) profile.addFriend(friend);
-            friendsView.setItems(FXCollections.observableList(profile.getFriends()));
+            if (event.getCode() == KeyCode.ENTER) {
+                Friend friend = new Friend();
+                friend.setPublicKey(addFriendField.getText());
+                profile.addFriend(friend);
+                friendsView.setItems(FXCollections.observableList(profile.getFriends()));
+                addFriendField.clear();
+            }
         });
 
         friendsView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            chatHistory.clear();
-            profile.getMessages(newValue).forEach((message) ->
-                    chatHistory.appendText(String.format("[%s] %s: %s\n", message.getTime(), message.getSender(), message.getMessage())));
+            if(newValue != null) {
+                chatHistory.clear();
+                profile.getMessages(newValue).forEach((message) ->
+                        chatHistory.appendText(String.format("[%s] %s: %s\n", message.getTime(), message.getSender(), message.getMessage())));
+            }
         });
     }
-
-    ;
 
     private void sendMessage(String message) {
         profile.sendMessage(new Message(profile.getPublicKey(), friendsView.getSelectionModel().getSelectedItem().getPublicKey(), message));

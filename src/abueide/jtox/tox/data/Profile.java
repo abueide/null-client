@@ -50,12 +50,15 @@ public class Profile {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             File db = new File(database.getDatabaseDir());
-            db.delete();
+            if(db.delete()){
+                System.out.println("Profile deleted successfully");
+            }else{
+                System.out.println("Failed to delete profile.");
+            }
         }
     }
 
     public void sendMessage(Message message) {
-        //TODO: Attempt to send message if online and wait for reply. If no reply, or offline mark message as unsent;
         if (!message.isSent()) {
             database.executeStatement(String.format("insert into messages (sender, receiver, message, sent) values('%s','%s','%s',%d);",
                     message.getSender(), message.getReceiver(), message.getMessage(), 0));
@@ -63,6 +66,7 @@ public class Profile {
             database.executeStatement(String.format("insert into messages (sender, receiver, message, sent) values('%s','%s','%s',%d);",
                     message.getSender(), message.getReceiver(), message.getMessage(), 1));
         }
+        //TODO: Attempt to send message if online and wait for reply. If no reply, or offline mark message as unsent;
     }
 
     public List<Message> getMessages(Friend friend) {
@@ -70,14 +74,17 @@ public class Profile {
         ResultSet resultSet = database.executeQuery("select * from messages");
         try {
             while (resultSet.next()) {
-                if (resultSet.getInt("sent") == 0) {
-                    if (resultSet.getString("sender").equals(friend.getPublicKey()) || resultSet.getString("receiver").equals(friend.getPublicKey()))
-                        chatlog.add(new Message(resultSet.getString("timestamp"), resultSet.getString("sender"), resultSet.getString("receiver"), resultSet.getString("message"), false));
-                } else {
-                    if (resultSet.getString("sender").equals(friend.getPublicKey()) || resultSet.getString("receiver").equals(friend.getPublicKey()))
-                        chatlog.add(new Message(resultSet.getString("timestamp"), resultSet.getString("sender"), resultSet.getString("receiver"), resultSet.getString("message"), true));
+                //System.out.println(resultSet.next());
+//                if(resultSet.next()) {
+                    if (resultSet.getInt("sent") == 0) {
+                        if (resultSet.getString("sender").equals(friend.getPublicKey()) || resultSet.getString("receiver").equals(friend.getPublicKey()))
+                            chatlog.add(new Message(resultSet.getString("timestamp"), resultSet.getString("sender"), resultSet.getString("receiver"), resultSet.getString("message"), false));
+                    } else {
+                        if (resultSet.getString("sender").equals(friend.getPublicKey()) || resultSet.getString("receiver").equals(friend.getPublicKey()))
+                            chatlog.add(new Message(resultSet.getString("timestamp"), resultSet.getString("sender"), resultSet.getString("receiver"), resultSet.getString("message"), true));
+                    }
                 }
-            }
+//            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
