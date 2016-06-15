@@ -1,10 +1,4 @@
-# jTox
-A Java Tox Client
+# Null Client
+A crossplatform league of legends client (not a game client). This is a work in progress, more information will be provided when something worthy is accomplished.
 
-Progress:
-
-Working on javafx gui : In Progress
-
-Working on backend    : Not started
-
-Implementing toxcore  : Not started
+Some code is recycled from my jTox project.

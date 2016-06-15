@@ -1,8 +1,5 @@
-package abueide.jtox.tox.data;
+package abueide.nullclient.data;
 
-import abueide.jtox.util.Globals;
-import abueide.jtox.util.Util;
-import abueide.jtox.util.database.DataBase;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -13,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import abueide.nullclient.util.Globals;
+import abueide.nullclient.util.Util;
+import abueide.nullclient.util.database.DataBase;
+
 public class Profile {
 
     private DataBase database;
@@ -22,7 +23,7 @@ public class Profile {
     }
 
     public Profile(String name) {
-        String status = "Using jTox";
+        String status = "Using nullclient";
         String public_key = "";
         String private_key = "";
         database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name, Globals.DB_EXT);
@@ -43,7 +44,7 @@ public class Profile {
 
     public void delete() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("jTox - Delete Profile");
+        alert.setTitle("Null Client Delete Profile");
         alert.setHeaderText("Delete profile " + this.getName() + " ?");
         alert.setContentText("Are you sure you want to delete this profile?\n\nAll relevant profile data (Keys, Contacts, Messages)\nwill be erased, and might not be recoverable.");
 

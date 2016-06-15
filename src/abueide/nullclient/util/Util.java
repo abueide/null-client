@@ -1,12 +1,12 @@
-package abueide.jtox.util;
-
-import abueide.jtox.tox.data.Profile;
-import abueide.jtox.util.database.DataBase;
+package abueide.nullclient.util;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import abueide.nullclient.data.Profile;
+import abueide.nullclient.util.database.DataBase;
 
 public class Util {
 
@@ -23,13 +23,13 @@ public class Util {
         else if (osName.contains("NUX"))
             appDataDir = System.getProperty("user.home") + "/.config/";
 
-        return appDataDir + "jTox/";
+        return appDataDir + "nullclient/";
     }
 
     public static List<Profile> getProfiles() {
         List<Profile> profiles = new ArrayList<>();
         File dir = new File(Globals.PREF.get(Globals.PROFILE_DIR, null));
-        for (File file : dir.listFiles((dir1, filename) -> {return filename.endsWith(".jtox");})) {
+        for (File file : dir.listFiles((dir1, filename) -> {return filename.endsWith(Globals.DB_EXT);})) {
             profiles.add(new Profile(new DataBase(file.getAbsolutePath())));
         }
         return profiles;

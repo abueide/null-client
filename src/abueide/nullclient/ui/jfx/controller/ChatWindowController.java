@@ -1,4 +1,4 @@
-package abueide.jtox.ui.jfx.controller;
+package abueide.nullclient.ui.jfx.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

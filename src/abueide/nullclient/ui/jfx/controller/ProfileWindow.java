@@ -1,6 +1,5 @@
-package abueide.jtox.ui.jfx.controller;
+package abueide.nullclient.ui.jfx.controller;
 
-import abueide.jtox.tox.data.Profile;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,6 +15,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import abueide.nullclient.data.Profile;
 
 public class ProfileWindow implements Initializable {
 
@@ -78,14 +79,14 @@ public class ProfileWindow implements Initializable {
     }
 
     public void display() {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/jtox/ui/jfx/graphical/ProfileWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/ProfileWindow.fxml"));
         loader.setController(this);
         Parent root;
         try {
             root = loader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("jTox - Edit Profile");
+            stage.setTitle("Null Client Edit Profile");
             stage.setScene(new Scene(root));
             stage.showAndWait();
         } catch (IOException e) {

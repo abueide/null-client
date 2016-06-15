@@ -1,8 +1,8 @@
-package abueide.jtox.util.database;
-
-import abueide.jtox.util.Globals;
+package abueide.nullclient.util.database;
 
 import java.sql.*;
+
+import abueide.nullclient.util.Globals;
 
 public class DataBase {
 

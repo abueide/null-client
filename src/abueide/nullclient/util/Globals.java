@@ -1,4 +1,4 @@
-package abueide.jtox.util;
+package abueide.nullclient.util;
 
 import java.util.prefs.Preferences;
 
@@ -7,10 +7,10 @@ public class Globals {
     //Preference Keys
     public static final String APPDATA_DIR = "APPDATA_DIR";
     public static final String PROFILE_DIR = "PROFILE_DIR";
-    public static final String JTOX_NODE = "/abueide/jTox";
-    public static final String DB_EXT = "jtox";
+    public static final String nullclient_NODE = "/abueide/nullclient";
+    public static final String DB_EXT = "sqlite";
 
-    public static final Preferences PREF = Preferences.userRoot().node(JTOX_NODE);
+    public static final Preferences PREF = Preferences.userRoot().node(nullclient_NODE);
 
     //SQLite Statements
     public static String createTableStatement() {

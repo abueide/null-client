@@ -1,6 +1,5 @@
-package abueide.jtox.ui.jfx.controller;
+package abueide.nullclient.ui.jfx.controller;
 
-import abueide.jtox.tox.data.Profile;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,6 +13,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import abueide.nullclient.data.Profile;
 
 public class ChatView implements Initializable {
 
@@ -31,7 +32,7 @@ public class ChatView implements Initializable {
 
         for (Profile profile : profiles) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/jtox/ui/jfx/graphical/ProfileView.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/ProfileView.fxml"));
                 loader.setController(new ProfileView(profile));
                 Tab tabby = new Tab();
                 tabby.setText(profile.getName());
@@ -44,13 +45,13 @@ public class ChatView implements Initializable {
     }
 
     public void display() {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/jtox/ui/jfx/graphical/ChatView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/ChatView.fxml"));
         loader.setController(this);
         Parent root;
         try {
             root = loader.load();
             Stage stage = new Stage();
-            stage.setTitle("jTox");
+            stage.setTitle("Null Client");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {

@@ -1,4 +1,4 @@
-package abueide.jtox.tox.data;
+package abueide.nullclient.data;
 
 /**
  * Created by gratin on 5/20/16.

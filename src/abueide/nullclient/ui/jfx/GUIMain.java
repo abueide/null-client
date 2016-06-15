@@ -1,12 +1,13 @@
-package abueide.jtox.ui.jfx;
+package abueide.nullclient.ui.jfx;
 
-import abueide.jtox.ui.jfx.controller.ProfileSelectionWindow;
-import abueide.jtox.util.Globals;
-import abueide.jtox.util.Util;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.File;
+
+import abueide.nullclient.ui.jfx.controller.ProfileSelectionWindow;
+import abueide.nullclient.util.Globals;
+import abueide.nullclient.util.Util;
 
 public class GUIMain extends Application {
 

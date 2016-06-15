@@ -1,8 +1,5 @@
-package abueide.jtox.ui.jfx.controller;
+package abueide.nullclient.ui.jfx.controller;
 
-import abueide.jtox.tox.data.Friend;
-import abueide.jtox.tox.data.Message;
-import abueide.jtox.tox.data.Profile;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.FXCollections;
@@ -14,6 +11,10 @@ import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import abueide.nullclient.data.Friend;
+import abueide.nullclient.data.Message;
+import abueide.nullclient.data.Profile;
 
 /**
  * Created by Andrew Bueide on 5/16/16.

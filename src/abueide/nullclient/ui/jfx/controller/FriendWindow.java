@@ -1,10 +1,5 @@
-package abueide.jtox.ui.jfx.controller;
+package abueide.nullclient.ui.jfx.controller;
 
-/**
- * Created by gratin on 5/20/16.
- */
-
-import abueide.jtox.tox.data.Friend;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,6 +14,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import abueide.nullclient.data.Friend;
 
 public class FriendWindow implements Initializable {
 
@@ -66,14 +63,14 @@ public class FriendWindow implements Initializable {
     }
 
     public Friend display() {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/jtox/ui/jfx/graphical/FriendWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/FriendWindow.fxml"));
         loader.setController(this);
         Parent root;
         try {
             root = loader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("jTox - Edit Contact");
+            stage.setTitle("Null Client Edit Contact");
             stage.setScene(new Scene(root));
             stage.showAndWait();
         } catch (IOException e) {

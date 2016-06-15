@@ -1,7 +1,5 @@
-package abueide.jtox.ui.jfx.controller;
+package abueide.nullclient.ui.jfx.controller;
 
-import abueide.jtox.tox.data.Profile;
-import abueide.jtox.util.Util;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.FXCollections;
@@ -21,6 +19,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import abueide.nullclient.data.Profile;
+import abueide.nullclient.util.Util;
 
 public class ProfileSelectionWindow implements Initializable {
 
@@ -123,12 +124,12 @@ public class ProfileSelectionWindow implements Initializable {
     // Window Methods
     public void launch(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getClassLoader().getResource("abueide/jtox/ui/jfx/graphical/ProfileSelectionWindow.fxml"));
+                getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/ProfileSelectionWindow.fxml"));
         loader.setController(this);
         Parent root;
         try {
             root = loader.load();
-            primaryStage.setTitle("jTox - Select Profile");
+            primaryStage.setTitle("Null Client - Select Profile");
             primaryStage.setScene(new Scene(root));
             primaryStage.show();
         } catch (IOException e) {
@@ -138,13 +139,13 @@ public class ProfileSelectionWindow implements Initializable {
 
     public void display() {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getClassLoader().getResource("abueide/jtox/ui/jfx/graphical/ProfileSelectionWindow.fxml"));
+                getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/ProfileSelectionWindow.fxml"));
         loader.setController(this);
         Parent root;
         try {
             root = loader.load();
             Stage stage = new Stage();
-            stage.setTitle("jTox - Select Profile");
+            stage.setTitle("Null Client - Select Profile");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
