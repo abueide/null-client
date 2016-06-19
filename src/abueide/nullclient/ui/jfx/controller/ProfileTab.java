@@ -1,5 +1,11 @@
 package abueide.nullclient.ui.jfx.controller;
 
+import abueide.nullclient.data.Friend;
+import abueide.nullclient.data.Message;
+import abueide.nullclient.data.Profile;
+import abueide.nullclient.util.Globals;
+import com.gvaneyck.rtmp.LoLRTMPSClient;
+import com.gvaneyck.rtmp.encoding.TypedObject;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.collections.FXCollections;
@@ -12,14 +18,10 @@ import javafx.util.Callback;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import abueide.nullclient.data.Friend;
-import abueide.nullclient.data.Message;
-import abueide.nullclient.data.Profile;
-
 /**
  * Created by Andrew Bueide on 5/16/16.
  */
-public class ProfileView implements Initializable {
+public class ProfileTab implements Initializable {
 
     @FXML
     Button sendButton;
@@ -32,15 +34,34 @@ public class ProfileView implements Initializable {
     @FXML
     TextField addFriendField;
 
-    Profile profile;
+    @FXML
+    Label username;
+    @FXML
+    Label rp;
+    @FXML
+    Label ip;
 
-    public ProfileView(Profile profile) {
+    Profile profile;
+    LoLRTMPSClient client;
+    TypedObject summoner;
+
+
+    public ProfileTab(Profile profile) {
         this.profile = profile;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        login();
+
+        rp.setText("RP: " + summoner.getDouble("rpBalance").intValue());
+        ip.setText("IP: " + summoner.getDouble("ipBalance").intValue());
+
+        //System.out.println(profile.getName() + ":" + profile.getPassword());
+
         GlyphsDude.setIcon(sendButton, FontAwesomeIcon.COMMENT);
+
+        username.setText(profile.getName());
 
         ContextMenu friendsListContext = new ContextMenu();
         MenuItem editFriend = new MenuItem("Edit Contact");
@@ -68,10 +89,8 @@ public class ProfileView implements Initializable {
                         if (t != null) {
                             if (!t.getAlias().isEmpty()) {
                                 setText(t.getAlias());
-                            } else if (!t.getName().isEmpty()) {
-                                setText(t.getName());
                             } else {
-                                setText(t.getPublicKey());
+                                setText(t.getName());
                             }
                         } else {
                             setText("");
@@ -88,12 +107,13 @@ public class ProfileView implements Initializable {
         sendButton.setOnAction(e -> sendMessage(messageField.getText()));
 
         messageField.setOnKeyPressed((event) -> {
-            if (event.getCode() == KeyCode.ENTER && !messageField.getText().isEmpty()) sendMessage(messageField.getText());
+            if (event.getCode() == KeyCode.ENTER && !messageField.getText().isEmpty())
+                sendMessage(messageField.getText());
         });
         addFriendField.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.ENTER) {
                 Friend friend = new Friend();
-                friend.setPublicKey(addFriendField.getText());
+                friend.setName(addFriendField.getText());
                 profile.addFriend(friend);
                 friendsView.setItems(FXCollections.observableList(profile.getFriends()));
                 addFriendField.clear();
@@ -101,7 +121,7 @@ public class ProfileView implements Initializable {
         });
 
         friendsView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null) {
+            if (newValue != null) {
                 chatHistory.clear();
                 profile.getMessages(newValue).forEach((message) ->
                         chatHistory.appendText(String.format("[%s] %s: %s\n", message.getTime(), message.getSender(), message.getMessage())));
@@ -110,9 +130,22 @@ public class ProfileView implements Initializable {
     }
 
     private void sendMessage(String message) {
-        profile.sendMessage(new Message(profile.getPublicKey(), friendsView.getSelectionModel().getSelectedItem().getPublicKey(), message));
+        profile.sendMessage(new Message(profile.getName(), friendsView.getSelectionModel().getSelectedItem().getName(), message));
         chatHistory.appendText(message + "\n");
         messageField.clear();
+    }
+
+    private void login(){
+        try {
+            client = new LoLRTMPSClient(profile.getRegion(), Globals.LEAGUE_CLIENT_VERSION, profile.getName(), profile.getPassword());
+            client.connectAndLogin();
+            System.out.println("Logged in");
+            int id = client.invoke("clientFacadeService",
+                    "getLoginDataPacketForUser", new Object[] {});
+            summoner = client.getResult(id).getTO("data").getTO("body");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

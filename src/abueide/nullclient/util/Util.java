@@ -23,7 +23,7 @@ public class Util {
         else if (osName.contains("NUX"))
             appDataDir = System.getProperty("user.home") + "/.config/";
 
-        return appDataDir + "nullclient/";
+        return appDataDir + "abueide/nullclient/";
     }
 
     public static List<Profile> getProfiles() {
@@ -35,11 +35,11 @@ public class Util {
         return profiles;
     }
 
-    public static DataBase createDataBase(String dir, String name, String ext){
-        File file = new File(String.format("%s%s.%s", dir, name, ext));
+    public static DataBase createDataBase(String dir, String name){
+        File file = new File(String.format("%s%s.%s", dir, name, Globals.DB_EXT));
         int i = 1;
         while(file.isFile()){
-            file = new File(String.format("%s%s" + "(" + i + ")"+".%s", dir, name, ext));
+            file = new File(String.format("%s%s" + "(" + i + ")"+".%s", dir, name, Globals.DB_EXT));
             i++;
         }
         file.getParentFile().mkdirs();

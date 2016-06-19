@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 import abueide.nullclient.util.Globals;
 import abueide.nullclient.util.Util;
 
-public class ProfileSelectionSettingsWindow implements Initializable {
+public class LoginSettings implements Initializable {
 
     @FXML
     Button dirButton1;
@@ -36,7 +36,7 @@ public class ProfileSelectionSettingsWindow implements Initializable {
     TextField databaseDir;
 
 
-    public ProfileSelectionSettingsWindow() {
+    public LoginSettings() {
         display();
     }
 
@@ -71,14 +71,14 @@ public class ProfileSelectionSettingsWindow implements Initializable {
     }
 
     private void display() {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/ProfileSelectionSettingsWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/LoginSettings.fxml"));
         loader.setController(this);
         Parent root;
         try {
             root = loader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Null Client Profile Selection Settings");
+            stage.setTitle("Null Client - Login Settings");
             stage.setScene(new Scene(root));
             stage.showAndWait();
         } catch (IOException e) {

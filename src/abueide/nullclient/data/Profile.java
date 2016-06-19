@@ -1,5 +1,6 @@
 package abueide.nullclient.data;
 
+import com.gvaneyck.rtmp.ServerInfo;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -22,24 +23,22 @@ public class Profile {
         this.database = database;
     }
 
-    public Profile(String name) {
-        String status = "Using nullclient";
-        String public_key = "";
-        String private_key = "";
-        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name, Globals.DB_EXT);
-        database.executeStatement(String.format("insert into profile (name, status, public_key, private_key) values('%s', '%s', '%s', '%s');", name, status, public_key, private_key));
+    public Profile(String name, String region) {
+        String status = "Using Null Client";
+        String password = "";
+        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name);
+        database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
     }
 
-    public Profile(String name, String status) {
-        String public_key = "";
-        String private_key = "";
-        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name, Globals.DB_EXT);
-        database.executeStatement(String.format("insert into profile (name, status, public_key, private_key) values('%s', '%s', '%s', '%s');", name, status, public_key, private_key));
+    public Profile(String name, String status, String region) {
+        String password = "";
+        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name);
+        database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
     }
 
-    public Profile(String name, String status, String public_key, String private_key) {
-        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name, Globals.DB_EXT);
-        database.executeStatement(String.format("insert into profile (name, status, public_key, private_key) values('%s', '%s', '%s', '%s');", name, status, public_key, private_key));
+    public Profile(String name, String password, String status, String region) {
+        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name);
+        database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
     }
 
     public void delete() {
@@ -75,17 +74,9 @@ public class Profile {
         ResultSet resultSet = database.executeQuery("select * from messages");
         try {
             while (resultSet.next()) {
-                //System.out.println(resultSet.next());
-//                if(resultSet.next()) {
-                    if (resultSet.getInt("sent") == 0) {
-                        if (resultSet.getString("sender").equals(friend.getPublicKey()) || resultSet.getString("receiver").equals(friend.getPublicKey()))
+                        if (resultSet.getString("sender").equals(friend.getName()) || resultSet.getString("receiver").equals(friend.getName()))
                             chatlog.add(new Message(resultSet.getString("timestamp"), resultSet.getString("sender"), resultSet.getString("receiver"), resultSet.getString("message"), false));
-                    } else {
-                        if (resultSet.getString("sender").equals(friend.getPublicKey()) || resultSet.getString("receiver").equals(friend.getPublicKey()))
-                            chatlog.add(new Message(resultSet.getString("timestamp"), resultSet.getString("sender"), resultSet.getString("receiver"), resultSet.getString("message"), true));
-                    }
                 }
-//            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -105,6 +96,32 @@ public class Profile {
         database.executeStatement("update profile set name = '" + name + "';");
     }
 
+    public String getPassword() {
+        try {
+            return database.executeQuery("select * from profile").getString("password");
+        } catch (Exception e) {
+            System.out.println("Unable to query profile");
+            return null;
+        }
+    }
+
+    public void setPassword(String password) {
+        database.executeStatement("update profile set password = '" + password + "';");
+    }
+
+    public ServerInfo getRegion() {
+        try {
+            return ServerInfo.fromString(database.executeQuery("select * from profile").getString("region"));
+        } catch (Exception e) {
+            System.out.println("Unable to query profile");
+            return null;
+        }
+    }
+
+    public void setRegion(String region) {
+        database.executeStatement("update profile set region = '" + region + "';");
+    }
+
     public String getStatus() {
         try {
             return database.executeQuery("select * from profile").getString("status");
@@ -118,45 +135,18 @@ public class Profile {
         database.executeStatement("update profile set status = '" + status + "';");
     }
 
-    public String getPublicKey() {
-        String publicKey = "";
-        try {
-            publicKey = database.executeQuery("select * from profile").getString("public_key");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return publicKey;
-    }
-
-    public void setPublicKey(String publicKey) {
-        database.executeStatement(String.format("update profile set public_key = '%s'", publicKey));
-    }
-
-    public String getPrivateKey() {
-        String privateKey = "";
-        try {
-            privateKey = database.executeQuery("select * from profile").getString("private_key");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return privateKey;
-    }
-
-    public void setPrivateKey(String privateKey) {
-        database.executeStatement(String.format("update profile set private_key = '%s'", privateKey));
-    }
-
 
     public void addFriend(Friend friend) {
         database.executeStatement(String.format("insert into friends (name, alias, status, public_key) values('%s','%s','%s','%s');",
-                friend.getName(), friend.getAlias(), friend.getStatus(), friend.getPublicKey()));
+                friend.getName(), friend.getAlias(), friend.getStatus()));
     }
 
     public void updateFriend(Friend friend) {
-        database.executeStatement(String.format("update friends set name = '%s', alias = '%s', status = '%s', public_key = '%s' where id = %d;", friend.getName(), friend.getAlias(), friend.getStatus(), friend.getPublicKey(), friend.getUid()));
+        database.executeStatement(String.format("update friends set name = '%s', alias = '%s', status = '%s', public_key = '%s' where id = %d;", friend.getName(), friend.getAlias(), friend.getStatus(), friend.getUid()));
     }
 
     public void deleteFriend(Friend friend) {
+        database.executeStatement(String.format("delete from messages where sender = %s or receiver = %s;", friend.getName(), friend.getName()));
         database.executeStatement(String.format("delete from friends where id = %s;", friend.getUid()));
     }
 
@@ -166,7 +156,7 @@ public class Profile {
 
         try {
             while (rs.next()) {
-                friends.add(new Friend(rs.getInt("id"), rs.getString("name"), rs.getString("alias"), rs.getString("status"), rs.getString("public_key")));
+                friends.add(new Friend(rs.getInt("id"), rs.getString("name"), rs.getString("alias"), rs.getString("status")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

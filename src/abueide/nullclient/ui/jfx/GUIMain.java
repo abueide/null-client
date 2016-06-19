@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-import abueide.nullclient.ui.jfx.controller.ProfileSelectionWindow;
+import abueide.nullclient.ui.jfx.controller.Login;
 import abueide.nullclient.util.Globals;
 import abueide.nullclient.util.Util;
 
@@ -18,12 +18,13 @@ public class GUIMain extends Application {
     @Override
     public void start(Stage primaryStage) {
         //Startup stuff
-        new ProfileSelectionWindow(Util.getProfiles()).launch(primaryStage);
+        new Login(Util.getProfiles()).launch(primaryStage);
     }
 
     @Override
     public void init() throws Exception {
         //Check for preferences, set them to default if they don't exist
+        Globals.PREF.clear();
         Globals.PREF.remove(Globals.PROFILE_DIR);
         if (Globals.PREF.get(Globals.APPDATA_DIR, null) == null) {
             Globals.PREF.put(Globals.APPDATA_DIR, Util.getAppData());

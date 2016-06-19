@@ -1,10 +1,12 @@
 package abueide.nullclient.ui.jfx.controller;
 
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Modality;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -16,27 +18,42 @@ import abueide.nullclient.data.Profile;
 
 public class MainWindow implements Initializable {
 
+    @FXML
+    TabPane tabPane;
+
+    List<Profile> profiles;
+
     public MainWindow(List<Profile> profiles) {
-        display();
+        this.profiles = profiles;
     }
 
     @Override
-    public void initialize(URL arg0, ResourceBundle arg1) {
-        // TODO Auto-generated method stub
+    public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        for (Profile profile : profiles) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/ProfileTab.fxml"));
+                loader.setController(new ProfileTab(profile));
+                Tab tabby = new Tab();
+                tabby.setText(profile.getName());
+                tabby.setContent(loader.load());
+                tabPane.getTabs().add(tabby);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    private void display() {
+    public void display() {
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/MainWindow.fxml"));
         loader.setController(this);
         Parent root;
         try {
             root = loader.load();
             Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Null Client - Profile Selection Settings");
+            stage.setTitle("Null Client");
             stage.setScene(new Scene(root));
-            stage.showAndWait();
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

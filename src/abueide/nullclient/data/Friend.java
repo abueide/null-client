@@ -9,17 +9,15 @@ public class Friend {
     String name = "Unknown";
     String alias = "";
     String status = "";
-    String public_key = "";
 
 
     public Friend(){}
 
-    public Friend(int uid, String name, String alias, String status, String public_key){
+    public Friend(int uid, String name, String alias, String status){
         this.uid = uid;
         this.name = name;
         this.alias = alias;
         this.status = status;
-        this.public_key = public_key;
     }
 
     public String getName() {
@@ -44,14 +42,6 @@ public class Friend {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getPublicKey() {
-        return public_key;
-    }
-
-    public void setPublicKey(String public_key) {
-        this.public_key = public_key;
     }
 
     public int getUid(){

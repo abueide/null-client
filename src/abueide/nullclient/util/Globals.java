@@ -9,6 +9,7 @@ public class Globals {
     public static final String PROFILE_DIR = "PROFILE_DIR";
     public static final String nullclient_NODE = "/abueide/nullclient";
     public static final String DB_EXT = "sqlite";
+    public static final String LEAGUE_CLIENT_VERSION = "6.12.xx";
 
     public static final Preferences PREF = Preferences.userRoot().node(nullclient_NODE);
 
@@ -16,17 +17,16 @@ public class Globals {
     public static String createTableStatement() {
         return "create table if not exists profile("
                 + "name text,"
+                + "password text,"
                 + "status text,"
-                + "public_key text,"
-                + "private_key text"
+                + "region text"
                 + ");"
 
                 + "create table if not exists friends("
                 + "id integer primary key,"
                 + "name text,"
                 + "alias text,"
-                + "status text,"
-                + "public_key text"
+                + "status text"
                 + ");"
 
                 + "create table if not exists messages ("

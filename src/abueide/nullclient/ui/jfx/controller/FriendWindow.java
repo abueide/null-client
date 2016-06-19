@@ -24,8 +24,6 @@ public class FriendWindow implements Initializable {
     @FXML
     TextField aliasField;
     @FXML
-    TextField publicKeyField;
-    @FXML
     Button clearLogsButton;
     @FXML
     Button resendFriendRequestButton;
@@ -41,9 +39,11 @@ public class FriendWindow implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        aliasField.setText(friend.getAlias());
-        publicKeyField.setText(friend.getPublicKey());
-
+        if(!friend.getAlias().isEmpty()) {
+            aliasField.setText(friend.getAlias());
+        }else{
+            aliasField.setText(friend.getName());
+        }
         cancelButton.setOnAction(e -> cancelButton.getScene().getWindow().hide());
 
         saveButton.setOnAction(e -> save());
@@ -51,14 +51,10 @@ public class FriendWindow implements Initializable {
         aliasField.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.ENTER) save();
         });
-        publicKeyField.setOnKeyPressed((event) -> {
-            if (event.getCode() == KeyCode.ENTER) save();
-        });
     }
 
     private void save() {
         friend.setAlias(aliasField.getText());
-        friend.setPublicKey(publicKeyField.getText());
         saveButton.getScene().getWindow().hide();
     }
 

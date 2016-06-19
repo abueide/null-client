@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 import abueide.nullclient.data.Profile;
 import abueide.nullclient.util.Util;
 
-public class ProfileSelectionWindow implements Initializable {
+public class Login implements Initializable {
 
     @FXML
     Button createProfileButton;
@@ -40,7 +40,7 @@ public class ProfileSelectionWindow implements Initializable {
 
     List<Profile> profiles;
 
-    public ProfileSelectionWindow(List<Profile> profiles) {
+    public Login(List<Profile> profiles) {
         this.profiles = profiles;
     }
 
@@ -53,8 +53,6 @@ public class ProfileSelectionWindow implements Initializable {
         GlyphsDude.setIcon(loadProfileButton, FontAwesomeIcon.SIGN_IN);
 
         profileListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        // holy shit this took forever to find and I have no clue how it works.
-        // If some one can do this better that would be nice.
         profileListView.setCellFactory(new Callback<ListView<Profile>, ListCell<Profile>>() {
 
             @Override
@@ -90,7 +88,7 @@ public class ProfileSelectionWindow implements Initializable {
 
     // setOnAction methods
     private void createProfile() {
-        new ProfileWindow().display();
+        new EditProfile().display();
         updateProfileListView();
     }
 
@@ -102,20 +100,20 @@ public class ProfileSelectionWindow implements Initializable {
 
     private void editProfile() {
         for (Profile profile : profileListView.getSelectionModel().getSelectedItems()) {
-            new ProfileWindow(profile).display();
+            new EditProfile(profile).display();
         }
         updateProfileListView();
     }
 
     private void settingsWindow(){
-        new ProfileSelectionSettingsWindow();
+        new LoginSettings();
         updateProfileListView();
     }
 
     private void loadProfile() {
         List<Profile> selected = profileListView.getSelectionModel().getSelectedItems();
         if (selected.size() > 0) {
-            new ChatView(selected).display();
+            new MainWindow(selected).display();
             loadProfileButton.getScene().getWindow().hide();
         }
     }
@@ -124,7 +122,7 @@ public class ProfileSelectionWindow implements Initializable {
     // Window Methods
     public void launch(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/ProfileSelectionWindow.fxml"));
+                getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/Login.fxml"));
         loader.setController(this);
         Parent root;
         try {
@@ -139,7 +137,7 @@ public class ProfileSelectionWindow implements Initializable {
 
     public void display() {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/ProfileSelectionWindow.fxml"));
+                getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/Login.fxml"));
         loader.setController(this);
         Parent root;
         try {
