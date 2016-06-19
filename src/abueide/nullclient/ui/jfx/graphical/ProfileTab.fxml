@@ -26,9 +26,9 @@
                   </HBox>
                   <HBox alignment="CENTER" prefWidth="250.0" spacing="10.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button mnemonicParsing="false" prefWidth="60.0" text="Profile" />
-                        <Button mnemonicParsing="false" prefWidth="60.0" text="Play" />
-                        <Button mnemonicParsing="false" prefWidth="60.0" text="Store" />
+                        <Button fx:id="profileButton" mnemonicParsing="false" prefWidth="60.0" text="Profile" />
+                        <Button fx:id="playButton" mnemonicParsing="false" prefWidth="60.0" text="Play" />
+                        <Button fx:id="storeButton" mnemonicParsing="false" prefWidth="60.0" text="Store" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" prefHeight="16.0" prefWidth="250.0" spacing="10.0">

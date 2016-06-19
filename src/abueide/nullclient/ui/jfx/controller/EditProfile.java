@@ -89,12 +89,12 @@ public class EditProfile implements Initializable {
             password = "";
         }
         if (newProfile) {
-            new Profile(name, password, status, ServerInfo.NA.toString());
+            new Profile(name, password, status, regionCombo.getSelectionModel().getSelectedItem().region);
         } else {
             profile.setName(name);
             profile.setStatus(status);
             profile.setPassword(password);
-            profile.setRegion(ServerInfo.NA.toString());
+            profile.setRegion(regionCombo.getSelectionModel().getSelectedItem().region);
         }
         saveButton.getScene().getWindow().hide();
     }
