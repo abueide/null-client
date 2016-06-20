@@ -1,5 +1,6 @@
 package abueide.nullclient.data;
 
+import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 import com.gvaneyck.rtmp.ServerInfo;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -58,15 +59,9 @@ public class Profile {
         }
     }
 
-    public void sendMessage(Message message) {
-        if (!message.isSent()) {
-            database.executeStatement(String.format("insert into messages (sender, receiver, message, sent) values('%s','%s','%s',%d);",
-                    message.getSender(), message.getReceiver(), message.getMessage(), 0));
-        } else {
-            database.executeStatement(String.format("insert into messages (sender, receiver, message, sent) values('%s','%s','%s',%d);",
-                    message.getSender(), message.getReceiver(), message.getMessage(), 1));
-        }
-        //TODO: Attempt to send message if online and wait for reply. If no reply, or offline mark message as unsent;
+    public void saveMessage(Message message){
+        database.executeStatement(String.format("insert into messages (sender, receiver, message, sent) values('%s','%s','%s',%d);",
+                message.getSender(), message.getReceiver(), message.getMessage(), 1));
     }
 
     public List<Message> getMessages(Friend friend) {
@@ -134,35 +129,4 @@ public class Profile {
     public void setStatus(String status) {
         database.executeStatement("update profile set status = '" + status + "';");
     }
-
-
-    public void addFriend(Friend friend) {
-        database.executeStatement(String.format("insert into friends (name, alias, status, public_key) values('%s','%s','%s','%s');",
-                friend.getName(), friend.getAlias(), friend.getStatus()));
-    }
-
-    public void updateFriend(Friend friend) {
-        database.executeStatement(String.format("update friends set name = '%s', alias = '%s', status = '%s', public_key = '%s' where id = %d;", friend.getName(), friend.getAlias(), friend.getStatus(), friend.getUid()));
-    }
-
-    public void deleteFriend(Friend friend) {
-        database.executeStatement(String.format("delete from messages where sender = %s or receiver = %s;", friend.getName(), friend.getName()));
-        database.executeStatement(String.format("delete from friends where id = %s;", friend.getUid()));
-    }
-
-    public List<Friend> getFriends() {
-        List<Friend> friends = new ArrayList<>();
-        ResultSet rs = database.executeQuery("select * from friends;");
-
-        try {
-            while (rs.next()) {
-                friends.add(new Friend(rs.getInt("id"), rs.getString("name"), rs.getString("alias"), rs.getString("status")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return friends;
-    }
-
 }

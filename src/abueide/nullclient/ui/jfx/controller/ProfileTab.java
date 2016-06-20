@@ -1,7 +1,9 @@
 package abueide.nullclient.ui.jfx.controller;
 
+import abueide.nullclient.data.Message;
 import abueide.nullclient.data.Profile;
 import abueide.nullclient.util.Globals;
+import com.github.theholywaffle.lolchatapi.ChatMode;
 import com.github.theholywaffle.lolchatapi.ChatServer;
 import com.github.theholywaffle.lolchatapi.FriendRequestPolicy;
 import com.github.theholywaffle.lolchatapi.LolChat;
@@ -22,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * Created by Andrew Bueide on 5/16/16.
@@ -120,7 +123,7 @@ public class ProfileTab implements Initializable {
             String s = addFriendField.getText().toLowerCase();
             for(Friend friend : friends){
                 try{
-                    if(friend.getName().toLowerCase().contains(s)) {
+                    if(friend.getName().toLowerCase().contains(s) && (friend.getChatMode().equals(ChatMode.AVAILABLE) || friend.getChatMode().equals(ChatMode.AWAY) || friend.getChatMode().equals(ChatMode.BUSY))) {
                         shownFriends.add(friend);
                     }
                 }catch(NullPointerException npe){
@@ -130,15 +133,12 @@ public class ProfileTab implements Initializable {
 
             friendsView.setItems(FXCollections.observableList(shownFriends));
         });
-        /*addFriendField.setOnKeyPressed((event) -> {
+        addFriendField.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.ENTER) {
-                Friend friend = new Friend();
-                friend.setName(addFriendField.getText());
-                profile.addFriend(friend);
-                friendsView.setItems(FXCollections.observableList(profile.getFriends()));
-                addFriendField.clear();
+                lolChat.addFriendByName(addFriendField.getText());
+                friendsView.setItems(FXCollections.observableList(lolChat.getFriends()));
             }
-        });*/
+        });
 
         friendsView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -150,9 +150,18 @@ public class ProfileTab implements Initializable {
     }
 
     private void sendMessage(String message) {
-        friendsView.getSelectionModel().getSelectedItem().sendMessage(message);
-        chatHistory.appendText(message + "\n");
+        Friend friend = friendsView.getSelectionModel().getSelectedItem();
+        friend.sendMessage(message);
+        profile.saveMessage(new Message(profile.getName(), friend.getName(), message, true));
+        updateChatHistory();
         messageField.clear();
+    }
+
+    private void updateChatHistory(){
+        chatHistory.clear();
+        for(Message message : profile.getMessages(friendsView.getSelectionModel().getSelectedItem())){
+            chatHistory.appendText(String.format("[%s] %s: %s\n", message.getTime(), message.getSender(), message.getMessage()));
+        }
     }
 
     private void openStore(){
@@ -178,7 +187,13 @@ public class ProfileTab implements Initializable {
         }
 
         lolChat = new LolChat(ChatServer.NA2, FriendRequestPolicy.ACCEPT_ALL);
-        lolChat.addChatListener((friend, message) -> chatHistory.appendText("[All]>" + friend.getName() + ": " + message));
+        lolChat.addChatListener((friend, message) -> {
+            if(friendsView.getSelectionModel().getSelectedItem().getName().equalsIgnoreCase(friend.getName())) {
+                profile.saveMessage(new Message(friend.getName(), profile.getName(), message, true));
+                updateChatHistory();
+            }
+
+        });
         if(lolChat.login(profile.getName(), profile.getPassword())){
             System.out.println("Connected!");
         }

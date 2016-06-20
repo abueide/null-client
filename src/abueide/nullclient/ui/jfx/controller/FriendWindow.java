@@ -1,5 +1,6 @@
 package abueide.nullclient.ui.jfx.controller;
 
+import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,8 +15,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import abueide.nullclient.data.Friend;
 
 public class FriendWindow implements Initializable {
 
@@ -39,11 +38,7 @@ public class FriendWindow implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        if(!friend.getAlias().isEmpty()) {
-            aliasField.setText(friend.getAlias());
-        }else{
             aliasField.setText(friend.getName());
-        }
         cancelButton.setOnAction(e -> cancelButton.getScene().getWindow().hide());
 
         saveButton.setOnAction(e -> save());
@@ -54,7 +49,7 @@ public class FriendWindow implements Initializable {
     }
 
     private void save() {
-        friend.setAlias(aliasField.getText());
+        //friend.setAlias(aliasField.getText());
         saveButton.getScene().getWindow().hide();
     }
 

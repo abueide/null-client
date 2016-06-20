@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
@@ -21,6 +22,13 @@ public class MainWindow implements Initializable {
     @FXML
     TabPane tabPane;
 
+    @FXML
+    Label username;
+    @FXML
+    Label rp;
+    @FXML
+    Label ip;
+
     List<Profile> profiles;
 
     public MainWindow(List<Profile> profiles) {
@@ -34,10 +42,10 @@ public class MainWindow implements Initializable {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/ProfileTab.fxml"));
                 loader.setController(new ProfileTab(profile));
-                Tab tabby = new Tab();
-                tabby.setText(profile.getName());
-                tabby.setContent(loader.load());
-                tabPane.getTabs().add(tabby);
+                Tab tab = new Tab();
+                tab.setContent(loader.load());
+                tab.setText(profile.getName());
+                tabPane.getTabs().add(tab);
             } catch (Exception e) {
                 e.printStackTrace();
             }
