@@ -64,7 +64,7 @@ public class Login implements Initializable {
                     protected void updateItem(Profile t, boolean bln) {
                         super.updateItem(t, bln);
                         if (t != null) {
-                            setText(t.getName());
+                            setText(t.getRegion().region + " - " + t.getName());
                         } else {
                             setText("");
                         }

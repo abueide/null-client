@@ -30,6 +30,7 @@ public class MainWindow implements Initializable {
     Label ip;
 
     List<Profile> profiles;
+    static Scene scene;
 
     public MainWindow(List<Profile> profiles) {
         this.profiles = profiles;
@@ -58,13 +59,18 @@ public class MainWindow implements Initializable {
         Parent root;
         try {
             root = loader.load();
+            scene = new Scene(root);
             Stage stage = new Stage();
             stage.setTitle("Null Client");
-            stage.setScene(new Scene(root));
+            stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Scene getScene(){
+        return scene;
     }
 
 }
