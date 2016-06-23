@@ -22,7 +22,12 @@ public class DataBase {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-            executeStatement(Globals.createTableStatement());
+        try {
+            PreparedStatement stmt = connection.prepareStatement(Globals.createTableStatement());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void close() {
@@ -32,18 +37,6 @@ public class DataBase {
             e.printStackTrace();
         }
         connection = null;
-    }
-
-    public void executeStatement(String s) {
-        if (connection != null) {
-            try {
-                Statement statement = connection.createStatement();
-                statement.executeUpdate(s);
-                statement.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public ResultSet executeQuery(String query){
@@ -56,6 +49,10 @@ public class DataBase {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Connection getConnection(){
+        return connection;
     }
 
     public String getDatabaseDir() {

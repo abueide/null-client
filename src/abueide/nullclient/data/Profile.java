@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 import java.io.File;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,18 +29,48 @@ public class Profile {
         String status = "Using Null Client";
         String password = "";
         database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name);
-        database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
+        try {
+            PreparedStatement stmt = database.getConnection().prepareStatement("insert into profile (name, password, status, region) values(?, ?, ?, ?)");
+            stmt.setString(1, name);
+            stmt.setString(2, password);
+            stmt.setString(3, status);
+            stmt.setString(4, region);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
     }
 
     public Profile(String name, String status, String region) {
         String password = "";
         database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name);
-        database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
+        try {
+            PreparedStatement stmt = database.getConnection().prepareStatement("insert into profile (name, password, status, region) values(?, ?, ?, ?)");
+            stmt.setString(1, name);
+            stmt.setString(2, password);
+            stmt.setString(3, status);
+            stmt.setString(4, region);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
     }
 
     public Profile(String name, String password, String status, String region) {
         database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name);
-        database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
+        try {
+            PreparedStatement stmt = database.getConnection().prepareStatement("insert into profile (name, password, status, region) values(?, ?, ?, ?)");
+            stmt.setString(1, name);
+            stmt.setString(2, password);
+            stmt.setString(3, status);
+            stmt.setString(4, region);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
     }
 
     public void delete() {
@@ -60,8 +91,18 @@ public class Profile {
     }
 
     public void saveMessage(Message message){
-        database.executeStatement(String.format("insert into messages (sender, receiver, message, sent) values('%s','%s','%s',%d);",
-                message.getSender(), message.getReceiver(), message.getMessage(), 1));
+        try {
+            PreparedStatement stmt = database.getConnection().prepareStatement("insert into messages (sender, receiver, message, sent) values(?, ?, ?, ?)");
+            stmt.setString(1, message.getSender());
+            stmt.setString(2, message.getReceiver());
+            stmt.setString(3, message.getMessage());
+            stmt.setInt(4, 1); // If message is sent; not used. 1 = true.
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        database.executeStatement(String.format("insert into messages (sender, receiver, message, sent) values('%s','%s','%s',%d);",
+//                message.getSender(), message.getReceiver(), message.getMessage(), 1));
     }
 
     public List<Message> getMessages(Friend friend) {
@@ -88,7 +129,14 @@ public class Profile {
     }
 
     public void setName(String name) {
-        database.executeStatement("update profile set name = '" + name + "';");
+        try {
+            PreparedStatement stmt = database.getConnection().prepareStatement("update profile set name = ?");
+            stmt.setString(1, name);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //database.executeStatement("update profile set name = '" + name + "';");
     }
 
     public String getPassword() {
@@ -101,7 +149,14 @@ public class Profile {
     }
 
     public void setPassword(String password) {
-        database.executeStatement("update profile set password = '" + password + "';");
+        try {
+            PreparedStatement stmt = database.getConnection().prepareStatement("update profile set password = ?");
+            stmt.setString(1, password);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //database.executeStatement("update profile set password = '" + password + "';");
     }
 
     public ServerInfo getRegion() {
@@ -114,7 +169,14 @@ public class Profile {
     }
 
     public void setRegion(String region) {
-        database.executeStatement("update profile set region = '" + region + "';");
+        try {
+            PreparedStatement stmt = database.getConnection().prepareStatement("update profile set region = ?");
+            stmt.setString(1, region);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //database.executeStatement("update profile set region = '" + region + "';");
     }
 
     public String getStatus() {
@@ -127,6 +189,13 @@ public class Profile {
     }
 
     public void setStatus(String status) {
-        database.executeStatement("update profile set status = '" + status + "';");
+        try {
+            PreparedStatement stmt = database.getConnection().prepareStatement("update profile set status = ?");
+            stmt.setString(1, status);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //database.executeStatement("update profile set status = '" + status + "';");
     }
 }
