@@ -1,9 +1,12 @@
 package abueide.nullclient.util.database;
 
-import java.sql.*;
-
 import abueide.nullclient.util.Globals;
 
+import java.sql.*;
+
+/**
+ * Created by Andrew Bueide on 5/20/16.
+ */
 public class DataBase {
 
     private String databaseDir;
@@ -39,7 +42,7 @@ public class DataBase {
         connection = null;
     }
 
-    public ResultSet executeQuery(String query){
+    public ResultSet executeQuery(String query) {
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(query);
@@ -51,7 +54,7 @@ public class DataBase {
         }
     }
 
-    public Connection getConnection(){
+    public Connection getConnection() {
         return connection;
     }
 

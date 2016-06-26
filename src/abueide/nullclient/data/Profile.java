@@ -1,7 +1,15 @@
 package abueide.nullclient.data;
 
+import abueide.nullclient.util.Globals;
+import abueide.nullclient.util.Util;
+import abueide.nullclient.util.database.DataBase;
+import com.github.theholywaffle.lolchatapi.ChatServer;
+import com.github.theholywaffle.lolchatapi.FriendRequestPolicy;
+import com.github.theholywaffle.lolchatapi.LolChat;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
+import com.gvaneyck.rtmp.LoLRTMPSClient;
 import com.gvaneyck.rtmp.ServerInfo;
+import com.gvaneyck.rtmp.encoding.TypedObject;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -13,64 +21,62 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import abueide.nullclient.util.Globals;
-import abueide.nullclient.util.Util;
-import abueide.nullclient.util.database.DataBase;
-
+/**
+ * Created by Andrew Bueide on 5/20/16.
+ */
 public class Profile {
 
     private DataBase database;
 
+    private boolean loggedInClient = false;
+    private boolean loggedInChat = false;
+
+    private LoLRTMPSClient client = null;
+    private LolChat lolChat = null;
+    private TypedObject summoner = null;
+
+
     public Profile(DataBase database) {
         this.database = database;
+        client = new LoLRTMPSClient(this.getRegion(), Globals.LEAGUE_CLIENT_VERSION, this.getName(), this.getPassword());
+        //Feels hacky but I don't feel like modifying lolchat to use the ServerInfo object
+        for (ChatServer chatServer : ChatServer.values()) {
+            if (chatServer.name().equalsIgnoreCase(this.getRegion().platform)) {
+                lolChat = new LolChat(chatServer, FriendRequestPolicy.ACCEPT_ALL);
+            }
+        }
     }
 
     public Profile(String name, String region) {
-        String status = "Using Null Client";
-        String password = "";
-        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name);
-        try {
-            PreparedStatement stmt = database.getConnection().prepareStatement("insert into profile (name, password, status, region) values(?, ?, ?, ?)");
-            stmt.setString(1, name);
-            stmt.setString(2, password);
-            stmt.setString(3, status);
-            stmt.setString(4, region);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        //database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
+        this(name, "", "Using Nullclient!", region);
     }
 
     public Profile(String name, String status, String region) {
-        String password = "";
-        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name);
-        try {
-            PreparedStatement stmt = database.getConnection().prepareStatement("insert into profile (name, password, status, region) values(?, ?, ?, ?)");
-            stmt.setString(1, name);
-            stmt.setString(2, password);
-            stmt.setString(3, status);
-            stmt.setString(4, region);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        //database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
+        this(name, status, "", region);
     }
 
     public Profile(String name, String password, String status, String region) {
-        database = Util.createDataBase(Globals.PREF.get(Globals.PROFILE_DIR, null), name);
+        this(Util.createProfile(name, password, status, region));
+    }
+
+    public void connectAndLogin() {
         try {
-            PreparedStatement stmt = database.getConnection().prepareStatement("insert into profile (name, password, status, region) values(?, ?, ?, ?)");
-            stmt.setString(1, name);
-            stmt.setString(2, password);
-            stmt.setString(3, status);
-            stmt.setString(4, region);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+            client.connectAndLogin();
+            System.out.println("Logged into login server!");
+            int id = client.invoke("clientFacadeService",
+                    "getLoginDataPacketForUser", new Object[]{});
+            summoner = client.getResult(id).getTO("data").getTO("body");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        //database.executeStatement(String.format("insert into profile (name, password, status, region) values('%s', '%s', '%s', '%s');", name, password, status, region));
+        if (lolChat.login(this.getName(), this.getPassword())) {
+            System.out.println("Logged into chat server!");
+        }
+    }
+
+    public void disconnect() {
+        client.close();
+        lolChat.disconnect();
     }
 
     public void delete() {
@@ -82,15 +88,15 @@ public class Profile {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             File db = new File(database.getDatabaseDir());
-            if(db.delete()){
+            if (db.delete()) {
                 System.out.println("Profile deleted successfully");
-            }else{
+            } else {
                 System.out.println("Failed to delete profile.");
             }
         }
     }
 
-    public void saveMessage(Message message){
+    public void saveMessage(Message message) {
         try {
             PreparedStatement stmt = database.getConnection().prepareStatement("insert into messages (sender, receiver, message, sent) values(?, ?, ?, ?)");
             stmt.setString(1, message.getSender());
@@ -101,8 +107,6 @@ public class Profile {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        database.executeStatement(String.format("insert into messages (sender, receiver, message, sent) values('%s','%s','%s',%d);",
-//                message.getSender(), message.getReceiver(), message.getMessage(), 1));
     }
 
     public List<Message> getMessages(Friend friend) {
@@ -110,9 +114,9 @@ public class Profile {
         ResultSet resultSet = database.executeQuery("select * from messages");
         try {
             while (resultSet.next()) {
-                        if (resultSet.getString("sender").equals(friend.getName()) || resultSet.getString("receiver").equals(friend.getName()))
-                            chatlog.add(new Message(resultSet.getString("timestamp"), resultSet.getString("sender"), resultSet.getString("receiver"), resultSet.getString("message"), false));
-                }
+                if (resultSet.getString("sender").equals(friend.getName()) || resultSet.getString("receiver").equals(friend.getName()))
+                    chatlog.add(new Message(resultSet.getString("timestamp"), resultSet.getString("sender"), resultSet.getString("receiver"), resultSet.getString("message"), false));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -136,7 +140,6 @@ public class Profile {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //database.executeStatement("update profile set name = '" + name + "';");
     }
 
     public String getPassword() {
@@ -156,7 +159,6 @@ public class Profile {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //database.executeStatement("update profile set password = '" + password + "';");
     }
 
     public ServerInfo getRegion() {
@@ -176,7 +178,6 @@ public class Profile {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //database.executeStatement("update profile set region = '" + region + "';");
     }
 
     public String getStatus() {
@@ -196,6 +197,17 @@ public class Profile {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //database.executeStatement("update profile set status = '" + status + "';");
+    }
+
+    public LoLRTMPSClient getClient() {
+        return client;
+    }
+
+    public LolChat getChatClient() {
+        return lolChat;
+    }
+
+    public TypedObject getSummoner() {
+        return summoner;
     }
 }

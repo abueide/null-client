@@ -1,7 +1,7 @@
 package abueide.nullclient.data;
 
 /**
- * Created by gratin on 5/20/16.
+ * Created by Andrew Bueide on 5/20/16.
  */
 public class Message {
 
@@ -11,20 +11,20 @@ public class Message {
     private String message = "";
     private boolean sent = false;
 
-    public Message(String sender, String receiver, String message){
+    public Message(String sender, String receiver, String message) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
     }
 
-    public Message(String sender, String receiver, String message, boolean sent){
+    public Message(String sender, String receiver, String message, boolean sent) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
         this.sent = sent;
     }
 
-    public Message(String time, String sender, String receiver, String message, boolean sent){
+    public Message(String time, String sender, String receiver, String message, boolean sent) {
         this.time = time;
         this.sender = sender;
         this.receiver = receiver;

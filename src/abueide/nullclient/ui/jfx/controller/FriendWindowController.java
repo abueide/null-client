@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -17,7 +16,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class FriendWindow implements Initializable {
+/**
+ * Created by Andrew Bueide on 5/20/16.
+ */
+public class FriendWindowController implements Initializable {
 
     private Friend friend;
 
@@ -33,13 +35,13 @@ public class FriendWindow implements Initializable {
     @FXML
     Button saveButton;
 
-    public FriendWindow(Friend friend) {
+    public FriendWindowController(Friend friend) {
         this.friend = friend;
     }
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-            aliasField.setText(friend.getName());
+        aliasField.setText(friend.getName());
         cancelButton.setOnAction(e -> cancelButton.getScene().getWindow().hide());
 
         saveButton.setOnAction(e -> save());
@@ -55,7 +57,7 @@ public class FriendWindow implements Initializable {
     }
 
     public Friend display() {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/FriendWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/view/FriendWindow.fxml"));
         loader.setController(this);
         Parent root;
         try {

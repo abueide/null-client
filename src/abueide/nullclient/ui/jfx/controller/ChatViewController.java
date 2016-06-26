@@ -2,7 +2,6 @@ package abueide.nullclient.ui.jfx.controller;
 
 import abueide.nullclient.data.Message;
 import abueide.nullclient.data.Profile;
-import com.github.theholywaffle.lolchatapi.LolChat;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -19,9 +18,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- * Created by gratin on 6/22/16.
+ * Created by Andrew Bueide on 6/22/16.
  */
-public class ChatView implements Initializable {
+public class ChatViewController implements Initializable {
 
     @FXML
     ListView<Friend> friendsView;
@@ -36,12 +35,10 @@ public class ChatView implements Initializable {
     Button sendButton;
 
     Profile profile;
-    LolChat lolChat;
 
 
-    public ChatView(Profile profile, LolChat lolChat) {
+    public ChatViewController(Profile profile) {
         this.profile = profile;
-        this.lolChat = lolChat;
     }
 
     @Override
@@ -53,7 +50,7 @@ public class ChatView implements Initializable {
         MenuItem deleteFriend = new MenuItem("Delete");
         deleteFriend.setOnAction(e -> {
             friendsView.getSelectionModel().getSelectedItems().forEach((friend) -> friend.delete());
-            friendsView.setItems(FXCollections.observableList(lolChat.getFriends()));
+            friendsView.setItems(FXCollections.observableList(profile.getChatClient().getFriends()));
         });
         friendsListContext.getItems().addAll(deleteFriend);
 
@@ -79,7 +76,7 @@ public class ChatView implements Initializable {
                 return cell;
             }
         });
-        friendsView.setItems(FXCollections.observableList(lolChat.getFriends()));
+        friendsView.setItems(FXCollections.observableList(profile.getChatClient().getFriends()));
         friendsView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 chatHistory.clear();
@@ -98,11 +95,11 @@ public class ChatView implements Initializable {
 
         addFriendField.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.ENTER) {
-                lolChat.addFriendByName(addFriendField.getText());
-                friendsView.setItems(FXCollections.observableList(lolChat.getFriends()));
+                profile.getChatClient().addFriendByName(addFriendField.getText());
+                friendsView.setItems(FXCollections.observableList(profile.getChatClient().getFriends()));
                 System.out.println("Added friend");
             } else {
-                List<Friend> friends = lolChat.getFriends();
+                List<Friend> friends = profile.getChatClient().getFriends();
                 List<Friend> shownFriends = new ArrayList<Friend>();
                 String s = addFriendField.getText().toLowerCase();
                 for (Friend friend : friends) {

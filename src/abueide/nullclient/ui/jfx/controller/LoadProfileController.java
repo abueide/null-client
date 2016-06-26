@@ -1,8 +1,10 @@
 package abueide.nullclient.ui.jfx.controller;
 
+import abueide.nullclient.data.Profile;
+import abueide.nullclient.ui.jfx.model.LoadProfileModel;
+import abueide.nullclient.ui.jfx.model.MainWindowModel;
 import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,10 +22,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import abueide.nullclient.data.Profile;
-import abueide.nullclient.util.Util;
-
-public class Login implements Initializable {
+/**
+ * Created by Andrew Bueide on 5/20/16.
+ */
+public class LoadProfileController implements Initializable {
 
     @FXML
     Button createProfileButton;
@@ -38,10 +40,10 @@ public class Login implements Initializable {
     @FXML
     ListView<Profile> profileListView;
 
-    List<Profile> profiles;
+    LoadProfileModel loadProfileModel;
 
-    public Login(List<Profile> profiles) {
-        this.profiles = profiles;
+    public LoadProfileController(LoadProfileModel loadProfileModel) {
+        this.loadProfileModel = loadProfileModel;
     }
 
     @Override
@@ -75,7 +77,7 @@ public class Login implements Initializable {
                 return cell;
             }
         });
-        profileListView.setItems(FXCollections.observableList(profiles));
+        profileListView.itemsProperty().bind(loadProfileModel.getProfilesProperty());
 
         // Set actions
         createProfileButton.setOnAction(e -> createProfile());
@@ -84,36 +86,36 @@ public class Login implements Initializable {
         settingsButton.setOnAction(e -> settingsWindow());
         loadProfileButton.setOnAction(e -> loadProfile());
 
+
     }
 
     // setOnAction methods
     private void createProfile() {
-        new EditProfile().display();
-        updateProfileListView();
+        new EditProfileController().display();
+        loadProfileModel.updateProfiles();
     }
 
     private void deleteProfile() {
         profileListView.getSelectionModel().getSelectedItems().forEach(Profile::delete);
-        updateProfileListView();
-
+        loadProfileModel.updateProfiles();
     }
 
     private void editProfile() {
         for (Profile profile : profileListView.getSelectionModel().getSelectedItems()) {
-            new EditProfile(profile).display();
+            new EditProfileController(profile).display();
         }
-        updateProfileListView();
+        loadProfileModel.updateProfiles();
     }
 
-    private void settingsWindow(){
-        new LoginSettings();
-        updateProfileListView();
+    private void settingsWindow() {
+        new LoadSettingsController();
+        loadProfileModel.updateProfiles();
     }
 
     private void loadProfile() {
         List<Profile> selected = profileListView.getSelectionModel().getSelectedItems();
         if (selected.size() > 0) {
-            new MainWindow(selected).display();
+            new MainWindowController(new MainWindowModel(selected)).display();
             loadProfileButton.getScene().getWindow().hide();
         }
     }
@@ -122,7 +124,7 @@ public class Login implements Initializable {
     // Window Methods
     public void launch(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/Login.fxml"));
+                getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/view/LoadProfile.fxml"));
         loader.setController(this);
         Parent root;
         try {
@@ -137,7 +139,7 @@ public class Login implements Initializable {
 
     public void display() {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/Login.fxml"));
+                getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/view/LoadProfile.fxml"));
         loader.setController(this);
         Parent root;
         try {
@@ -149,10 +151,5 @@ public class Login implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void updateProfileListView() {
-        profiles = Util.getProfiles();
-        profileListView.setItems(FXCollections.observableList(profiles));
     }
 }

@@ -2,6 +2,9 @@ package abueide.nullclient.util;
 
 import java.util.prefs.Preferences;
 
+/**
+ * Created by Andrew Bueide on 5/20/16.
+ */
 public class Globals {
 
     //Preference Keys

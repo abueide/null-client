@@ -1,5 +1,7 @@
 package abueide.nullclient.ui.jfx.controller;
 
+import abueide.nullclient.util.Globals;
+import abueide.nullclient.util.Util;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,10 +17,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import abueide.nullclient.util.Globals;
-import abueide.nullclient.util.Util;
-
-public class LoginSettings implements Initializable {
+/**
+ * Created by Andrew Bueide on 5/20/16.
+ */
+public class LoadSettingsController implements Initializable {
 
     @FXML
     Button dirButton1;
@@ -36,7 +38,7 @@ public class LoginSettings implements Initializable {
     TextField databaseDir;
 
 
-    public LoginSettings() {
+    public LoadSettingsController() {
         display();
     }
 
@@ -62,7 +64,7 @@ public class LoginSettings implements Initializable {
         saveButton.setOnAction(e -> save());
     }
 
-    private void save(){
+    private void save() {
         Globals.PREF.put(Globals.APPDATA_DIR, appDataDir.getText());
 //        Globals.PREF.put(Globals.nullclient_DB, databaseDir.getText());
 //        Globals.nullclientdb.close();
@@ -71,14 +73,14 @@ public class LoginSettings implements Initializable {
     }
 
     private void display() {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/LoginSettings.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/view/LoadSettings.fxml"));
         loader.setController(this);
         Parent root;
         try {
             root = loader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Null Client - Login Settings");
+            stage.setTitle("Null Client - LoadProfileController Settings");
             stage.setScene(new Scene(root));
             stage.showAndWait();
         } catch (IOException e) {

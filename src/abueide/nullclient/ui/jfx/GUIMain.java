@@ -1,14 +1,19 @@
 package abueide.nullclient.ui.jfx;
 
+import abueide.nullclient.ui.jfx.controller.LoadProfileController;
+import abueide.nullclient.ui.jfx.model.LoadProfileModel;
+import abueide.nullclient.util.Globals;
+import abueide.nullclient.util.Util;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import abueide.nullclient.ui.jfx.controller.Login;
-import abueide.nullclient.util.Globals;
-import abueide.nullclient.util.Util;
-
+/**
+ * Created by Andrew Bueide on 5/20/16.
+ */
 public class GUIMain extends Application {
 
     public static void main(String[] args) {
@@ -18,7 +23,9 @@ public class GUIMain extends Application {
     @Override
     public void start(Stage primaryStage) {
         //Startup stuff
-        new Login(Util.getProfiles()).launch(primaryStage);
+        List<String> dirList = new ArrayList<>();
+        dirList.add(Globals.PREF.get(Globals.PROFILE_DIR, null));
+        new LoadProfileController(new LoadProfileModel(dirList)).launch(primaryStage);
     }
 
     @Override
@@ -53,7 +60,7 @@ public class GUIMain extends Application {
             }
         }
 
-        }
+    }
 
     @Override
     public void stop() {

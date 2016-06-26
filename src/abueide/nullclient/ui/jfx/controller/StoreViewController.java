@@ -12,9 +12,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * Created by gratin on 6/22/16.
+ * Created by Andrew Bueide on 6/22/16.
  */
-public class StoreView implements Initializable{
+public class StoreViewController implements Initializable {
 
     @FXML
     WebView webView;
@@ -22,7 +22,7 @@ public class StoreView implements Initializable{
     WebEngine webEngine;
     String s;
 
-    public StoreView(String s){
+    public StoreViewController(String s) {
         this.s = s;
     }
 
@@ -32,14 +32,16 @@ public class StoreView implements Initializable{
         webEngine.load(s);
 
         //Very hackish, only solution I could find
-        Scene scene = MainWindow.getScene();
+        Scene scene = MainWindowController.getScene();
         scene.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
                 webView.setPrefWidth(newSceneWidth.doubleValue());
             }
         });
         scene.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
                 webView.setPrefHeight(newSceneHeight.doubleValue());
             }
         });

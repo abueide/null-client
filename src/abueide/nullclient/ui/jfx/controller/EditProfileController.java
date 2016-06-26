@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class EditProfile implements Initializable {
+/**
+ * Created by Andrew Bueide on 5/20/16.
+ */
+public class EditProfileController implements Initializable {
 
     private boolean newProfile = false;
     private Profile profile;
@@ -38,11 +41,11 @@ public class EditProfile implements Initializable {
     @FXML
     Button cancelButton;
 
-    public EditProfile() {
+    public EditProfileController() {
         newProfile = true;
     }
 
-    public EditProfile(Profile profile) {
+    public EditProfileController(Profile profile) {
         this.profile = profile;
     }
 
@@ -54,7 +57,6 @@ public class EditProfile implements Initializable {
         if (!newProfile) {
             profileNameField.setText(profile.getName());
         }
-
 
 
         passwordField.setDisable(true);
@@ -100,7 +102,7 @@ public class EditProfile implements Initializable {
     }
 
     public void display() {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/graphical/EditProfile.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/view/EditProfile.fxml"));
         loader.setController(this);
         Parent root;
         try {
