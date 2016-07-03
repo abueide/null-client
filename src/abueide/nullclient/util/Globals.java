@@ -12,7 +12,7 @@ public class Globals {
     public static final String PROFILE_DIR = "PROFILE_DIR";
     public static final String nullclient_NODE = "/abueide/nullclient";
     public static final String DB_EXT = "sqlite";
-    public static final String LEAGUE_CLIENT_VERSION = "6.12.xx";
+    public static final String LEAGUE_CLIENT_VERSION = "6.13.xx";
 
     public static final Preferences PREF = Preferences.userRoot().node(nullclient_NODE);
 

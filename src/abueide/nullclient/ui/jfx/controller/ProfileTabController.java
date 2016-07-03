@@ -56,51 +56,6 @@ public class ProfileTabController implements Initializable {
         storeButton.setOnAction(e -> openStore());
     }
 
-/*    private void login() {
-        //League of Legends Server
-
-        try {
-            client = new LoLRTMPSClient(profile.getRegion(), Globals.LEAGUE_CLIENT_VERSION, profile.getName(), profile.getPassword());
-            client.connectAndLogin();
-            System.out.println("Logged into login server!");
-            int id = client.invoke("clientFacadeService",
-                    "getLoginDataPacketForUser", new Object[]{});
-            summoner = client.getResult(id).getTO("data").getTO("body");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-*//*        try {
-            final LeagueConnection c = new LeagueConnection(profile.getRegion());
-            c.getAccountQueue().addAccount(new LeagueAccount(
-                    ServerInfo.NA, "6.12.xx", profile.getName(), profile.getPassword()));
-            Map<LeagueAccount, LeagueException> exceptions = c.getAccountQueue().connectAll();
-            if(exceptions != null) {
-                for(LeagueAccount account : exceptions.keySet()) {
-                    System.out.println(account + " error: " + exceptions.get(account));
-                }
-                return;
-            }
-            c.getGameService().
-            LeagueSummoner test = new LeagueSummoner();
-           // System.out.println(c.getClientFacadeService().test());
-        } catch (LeagueException e) {
-            e.printStackTrace();
-        }*//*
-        //Chat Server
-        lolChat = new LolChat(ChatServer.NA2, FriendRequestPolicy.ACCEPT_ALL);
-        if(lolChat.login(profile.getName(), profile.getPassword())){
-            System.out.println("Logged into chat server!");
-        }
-
-        *//*lolChat.addChatListener((friend, message) -> {
-            if(friendsView.getSelectionModel().getSelectedItem().getName().equalsIgnoreCase(friend.getName())) {
-                profile.saveMessage(new Message(friend.getName(), profile.getName(), message, true));
-                updateChatHistory();
-            }
-
-        });*//*
-    }*/
-
     private void openChat() {
         try {
             loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/view/ChatView.fxml"));
@@ -116,7 +71,8 @@ public class ProfileTabController implements Initializable {
         try {
             int id = profile.getClient().invoke("loginService", "getStoreUrl", new Object[]{});
             loader = new FXMLLoader(getClass().getClassLoader().getResource("abueide/nullclient/ui/jfx/view/StoreView.fxml"));
-            loader.setController(new StoreViewController(profile.getClient().getResult(id).getTO("data").getString("body")));
+            String storeURL = profile.getClient().getResult(id).getTO("data").getString("body");
+            loader.setController(new StoreViewController(storeURL));
             contentPane.getChildren().clear();
             contentPane.getChildren().add(loader.load());
         } catch (Exception e) {

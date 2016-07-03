@@ -54,16 +54,22 @@ public class EditProfileController implements Initializable {
 
         ObservableList<ServerInfo> serverList = FXCollections.observableArrayList(ServerInfo.servers);
 
-        if (!newProfile) {
-            profileNameField.setText(profile.getName());
-        }
-
-
-        passwordField.setDisable(true);
-
         regionCombo.setItems(serverList);
         regionCombo.getSelectionModel().select(0);
 
+
+        statusField.setDisable(true);
+        passwordField.setDisable(true);
+
+        if (!newProfile) {
+            profileNameField.setText(profile.getName());
+            regionCombo.getSelectionModel().select(profile.getRegion());
+            if (!profile.getPassword().isEmpty()) {
+                passwordField.setDisable(false);
+                passwordField.setText(profile.getPassword());
+                savePasswordCheck.selectedProperty().set(true);
+            }
+        }
         savePasswordCheck.setOnAction(e -> passwordField.setDisable(!passwordField.isDisabled()));
 
         cancelButton.setOnAction(e -> cancelButton.getScene().getWindow().hide());
